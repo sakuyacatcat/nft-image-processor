@@ -2,14 +2,14 @@
 
 ## frontend
 
-- アップロード
-- 匿名化
-- ダウンサイズ
-- svg 化
-- ドット絵
+- [x] アップロード
+- [ ] 匿名化
+- [ ] ダウンサイズ
+- [ ] svg 化
+- [ ] ドット絵
 
-- line nft mint
+- [ ] line nft mint
 
 ## contract
 
-- フルオンチェーン mint
+- [ ] フルオンチェーン mint
