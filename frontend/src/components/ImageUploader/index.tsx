@@ -25,13 +25,14 @@ export default function ImageUploader() {
   const [crop, setCrop] = useState<Crop>()
   const imgRef = useRef<HTMLImageElement | null>(null)
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
+	const [svgString, setSvgString] = useState<string | null>(null);
 
   const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-	if (e.target.files && e.target.files.length > 0) {
-	  const reader = new FileReader()
-	  reader.addEventListener('load', () => setImgSrc(reader.result as string))
-	  reader.readAsDataURL(e.target.files[0])
-	}
+		if (e.target.files && e.target.files.length > 0) {
+			const reader = new FileReader()
+			reader.addEventListener('load', () => setImgSrc(reader.result as string))
+			reader.readAsDataURL(e.target.files[0])
+		}
   }
 
   const onImageLoaded = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
@@ -71,7 +72,15 @@ export default function ImageUploader() {
 			// 修復された画像をCanvasに表示
       cv.imshow(canvasRef.current, resized);
 
-      // CanvasからDataURLを取得し、imgSrcを更新
+			const pngDataUrl = canvasRef.current!.toDataURL();
+
+			// CanvasからSVGに変換
+			const SvgString = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512">
+      <image href="${pngDataUrl}" x="0" y="0" height="512" width="512"/>
+			</svg>`;
+			setSvgString(SvgString); // SVG文字列をstateにセット
+
+			// CanvasからDataURLを取得し、imgSrcを更新
       const newImgSrc = canvas.toDataURL();
       setImgSrc(newImgSrc);
 
@@ -106,6 +115,9 @@ export default function ImageUploader() {
 		</ReactCrop>
 	  )}
 		<canvas ref={canvasRef}></canvas>
+		{svgString && (
+			<img src={`data:image/svg+xml,${encodeURIComponent(svgString)}`} alt="SVG output" />
+		)}
 	</div>
   )
 }
