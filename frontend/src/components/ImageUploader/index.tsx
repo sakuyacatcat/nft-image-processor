@@ -47,43 +47,34 @@ export default function ImageUploader() {
       const ctx = canvas.getContext('2d')!;
       ctx.drawImage(imgRef.current, 0, 0);
 
-			// canvasがオリジナルに対して画像比率を定義
-      const scaleX = imgRef.current.width / imgRef.current.naturalWidth;
-      const scaleY = imgRef.current.height / imgRef.current.naturalHeight;
-
       // クロップ領域に対応するマスクを作成
       let mask = new cv.Mat.zeros(imgRef.current.height, imgRef.current.width, cv.CV_8UC1);
       let rect = new cv.Rect(crop.x!, crop.y!, crop.width!, crop.height!);
       mask.roi(rect).setTo(new cv.Scalar(255));
 
-      // 元画像をcv.Matに変換
+      // 元画像をcv.Matに変換、RGBAをinpaintにぶち込めるようにRGBに変換しておく
       const src = cv.imread(canvas);
+			let src3Channel = new cv.Mat();
+			cv.cvtColor(src, src3Channel, cv.COLOR_RGBA2RGB);
 
-			console.log(src);
-			cv.imshow(canvasRef.current, src)
+		  // インペインティングの適用
+      const dst = new cv.Mat(src3Channel.rows, src3Channel.cols, src3Channel.type());
+      const inpaintRadius = 3;
+      const inpaintMethod = cv.INPAINT_NS;
+      cv.inpaint(src3Channel, mask, dst, inpaintRadius, inpaintMethod);
 
-	  // インペインティングの適用
-      // const dst = new cv.Mat();
-      // const inpaintRadius = 3;
-      // const inpaintMethod = cv.INPAINT_TELEA;
-      // console.log("c");
-      // cv.inpaint(src, mask, dst, inpaintRadius, inpaintMethod);
-      // // 修復された画像をCanvasに表示
-      // console.log("d");
-      // console.log(mask);
-      // console.log(dst);
-      // console.log(inpaintRadius);
-      // console.log(inpaintMethod);
-      // cv.imshow(canvas, dst);
+			// 修復された画像をCanvasに表示
+      cv.imshow(canvasRef.current, dst);
 
-      // // CanvasからDataURLを取得し、imgSrcを更新
-      // const newImgSrc = canvas.toDataURL();
-      // setImgSrc(newImgSrc);
+      // CanvasからDataURLを取得し、imgSrcを更新
+      const newImgSrc = canvas.toDataURL();
+      setImgSrc(newImgSrc);
 
       // // リソースの解放
-      // src.delete();
-      // dst.delete();
-      // mask.delete();
+			src.delete();
+      src3Channel.delete();
+      dst.delete();
+      mask.delete();
     }
     console.log('Crop:', crop);
   }
@@ -100,7 +91,6 @@ export default function ImageUploader() {
 		  crop={crop}
 		  onComplete={onCropComplete}
 		  onChange={onCropChange}
-		//   aspect={16 / 9}
 		>
 		  <img
 			ref={imgRef}
