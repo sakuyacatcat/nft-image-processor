@@ -63,8 +63,13 @@ export default function ImageUploader() {
       const inpaintMethod = cv.INPAINT_NS;
       cv.inpaint(src3Channel, mask, dst, inpaintRadius, inpaintMethod);
 
+			// 336x336のサイズにリサイズ
+			const dsize = new cv.Size(512, 512);
+			let resized = new cv.Mat();
+			cv.resize(dst, resized, dsize, 0, 0, cv.INTER_LINEAR); // ドット絵効果のためにcv.INTER_NEARESTを使用
+
 			// 修復された画像をCanvasに表示
-      cv.imshow(canvasRef.current, dst);
+      cv.imshow(canvasRef.current, resized);
 
       // CanvasからDataURLを取得し、imgSrcを更新
       const newImgSrc = canvas.toDataURL();
