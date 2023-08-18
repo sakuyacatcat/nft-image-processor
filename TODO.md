@@ -9,7 +9,8 @@
 - [x] ドット絵
 
 - [ ] line nft mint
+- [x] vercel
 
 ## contract
 
-- [ ] フルオンチェーン mint
+- [x] フルオンチェーン mint
