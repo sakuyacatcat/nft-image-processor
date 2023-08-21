@@ -18,3 +18,10 @@ contracts
 
 - 発行済 NFT のうち最大の tokenId を取得できる
 - svg 文字列を入力に tokenId に関連付けて保存できる
+
+## TODO
+
+- [ ] 発行済 NFT のうち最大の tokenId を取得できる
+  - [ ] 発行済 NFT が 0 の場合は 0 を返す
+	- [ ] 発行済 NFT が 1 以上の場合は最大の tokenId を返す
+- [ ] svg 文字列を入力に tokenId に関連付けて保存できる
