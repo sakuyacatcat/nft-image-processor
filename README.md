@@ -9,13 +9,11 @@ graph TD
 
   subgraph frontend
     A[front page]
-    B[process image]
-    A -->|"api"| B
   end
 
   subgraph contract
-    C[issue nft]
+    B[issue nft]
   end
 
-  A -->|"web3.js"| C
+  A -->|"thirdweb"| B
 ```
