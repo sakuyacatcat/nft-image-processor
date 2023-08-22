@@ -3,7 +3,17 @@
   "scripts": {
     "build": "npx thirdweb@latest detect",
     "deploy": "npx thirdweb@latest deploy",
-    "release": "npx thirdweb@latest release"
+    "release": "npx thirdweb@latest release",
+    "test": "npx hardhat test",
+    "test:watch": "nodemon"
+  },
+  "nodemonConfig": {
+    "exec": "npx hardhat test",
+    "watch": [
+      "contracts/",
+      "test/"
+    ],
+    "ext": "sol,ts"
   },
   "devDependencies": {
     "@matterlabs/hardhat-zksync-solc": "^0.3.17",
@@ -15,6 +25,7 @@
     "chai": "^4.3.7",
     "ethers": "^5.0.0",
     "hardhat": "^2.13.0",
+    "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   },
