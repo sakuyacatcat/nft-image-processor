@@ -21,16 +21,16 @@ describe("DotImageRepository", function() {
     });
 
     describe("入力された連長圧縮された svg 文字列が不正な場合 DotImage オブジェクトの作成に失敗する", function() {
-      it("入力が適切な連長圧縮フォーマットであるが、32x32 ドット分の文字列でなく、1文字足りない場合に invalidCompressedSvgLength エラーを返す", async () => {
+      it("入力が適切な連長圧縮フォーマットであるが、32x32 ドット分の文字列でなく、1文字足りない場合に invalidDecompressedSvgLength エラーを返す", async () => {
         // すべて"00"のカラーインデックスの32x32のドット絵よりも1ドット少ないsvgを連長圧縮したbytes列
         const tooShortCompressedSVG = "0xff00ff00ff00ff000300";
-        await expect(contract.constructDotImage(tooShortCompressedSVG)).to.be.rejectedWith("invalidCompressedSvgLength");
+        await expect(contract.constructDotImage(tooShortCompressedSVG)).to.be.rejectedWith("invalidDecompressedSvgLength");
       });
 
-      it("入力が適切な連長圧縮フォーマットであるが、32x32 ドット分の文字列でなく、1文字多い場合に invalidCompressedSvgLength エラーを返す", async () => {
+      it("入力が適切な連長圧縮フォーマットであるが、32x32 ドット分の文字列でなく、1文字多い場合に invalidDecompressedSvgLength エラーを返す", async () => {
         // すべて"00"のカラーインデックスの32x32のドット絵よりも1ドット多いsvgを連長圧縮したbytes列
         const tooLongCompressedSVG = "0xff00ff00ff00ff000500";
-        await expect(contract.constructDotImage(tooLongCompressedSVG)).to.be.rejectedWith("invalidCompressedSvgLength");
+        await expect(contract.constructDotImage(tooLongCompressedSVG)).to.be.rejectedWith("invalidDecompressedSvgLength");
       });
     })
   })

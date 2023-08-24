@@ -13,7 +13,7 @@ contract DotImageRepository is IDotImageRepository {
     }
 
     function _validateRLESvgLength(bytes memory rleSvg) internal pure {
-        require(_decompressedSvgLength(rleSvg) == 1024, "invalidCompressedSvgLength");
+        require(_decompressedSvgLength(rleSvg) == 1024, "invalidDecompressedSvgLength");
     }
 
     function _decompressedSvgLength(bytes memory rleSvg) internal pure returns (uint256) {
