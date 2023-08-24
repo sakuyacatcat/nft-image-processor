@@ -1,6 +1,6 @@
 import "@matterlabs/hardhat-zksync-solc";
+import "@nomicfoundation/hardhat-chai-matchers";
 import "@nomiclabs/hardhat-ethers";
-import '@nomiclabs/hardhat-waffle';
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
