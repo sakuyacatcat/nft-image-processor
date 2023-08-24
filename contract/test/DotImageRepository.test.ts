@@ -21,38 +21,30 @@ describe("DotImageRepository", function() {
     });
 
     describe("入力された連長圧縮された svg 文字列が不正な長さの場合 DotImage オブジェクトの作成に失敗する", function() {
-      it("入力が適切な連長圧縮フォーマットであるが、32x32 ドット分の文字列でなく、1 文字足りない場合に invalidDecompressedSvgLength エラーを返す", async () => {
-        // すべて"00"のカラーインデックスの32x32のドット絵よりも1ドット少ないsvgを連長圧縮したbytes列
-        const tooShortCompressedSVG = "0xff00ff00ff00ff000300";
-        await expect(contract.constructDotImage(tooShortCompressedSVG)).to.be.rejectedWith("invalidDecompressedSvgLength");
-      });
+      const testCases = [
+        { name: "32x32 ドット分の文字列よりも 1 文字少ない bytes 列の場合", input: "0xff00ff00ff00ff000300", expected: "invalidDecompressedSvgLength" },
+        { name: "32x32 ドット分の文字列よりも 1 文字多い bytes 列の場合", input: "0xff00ff00ff00ff000500", expected: "invalidDecompressedSvgLength" },
+      ];
 
-      it("入力が適切な連長圧縮フォーマットであるが、32x32 ドット分の文字列でなく、1 文字多い場合に invalidDecompressedSvgLength エラーを返す", async () => {
-        // すべて"00"のカラーインデックスの32x32のドット絵よりも1ドット多いsvgを連長圧縮したbytes列
-        const tooLongCompressedSVG = "0xff00ff00ff00ff000500";
-        await expect(contract.constructDotImage(tooLongCompressedSVG)).to.be.rejectedWith("invalidDecompressedSvgLength");
+      testCases.forEach(({name, input, expected}) => {
+        it(`入力が適切な連長圧縮フォーマットであるが、${name}に ${expected} エラーを返す`, async () => {
+          await expect(contract.constructDotImage(input)).to.be.rejectedWith(expected);
+        });
       });
-    })
+    });
 
     describe("入力された連長圧縮 svg 文字列が不正なフォーマットの場合 DotImage オブジェクトの作成に失敗する", function() {
-      it("入力の連長圧縮が空の bytes 文字列の場合に invalidDecompressedSvgFormat を返す", async () => {
-        const emptyCompressedSVG = "0x";
-        await expect(contract.constructDotImage(emptyCompressedSVG)).to.be.rejectedWith("invalidDecompressedSvgFormat");
-      });
+      const testCases = [
+        { name: "空の bytes 文字列の場合", input: "0x", expected: "invalidDecompressedSvgFormat"},
+        { name: "奇数長の bytes 文字列の場合", input: "0xff", expected: "invalidDecompressedSvgFormat"},
+        { name: "0~F 以外の文字を含む場合", input: "0xff!!", expected: "invalid arrayify value"},
+        { name: "0x 始まりの bytes 文字列でない場合", input: "ff00", expected: "invalid arrayify value"},
+      ];
 
-      it("入力の連長圧縮が奇数長の bytes 文字列の場合に invalidDecompressedSvgFormat を返す", async () => {
-        const emptyCompressedSVG = "0xff";
-        await expect(contract.constructDotImage(emptyCompressedSVG)).to.be.rejectedWith("invalidDecompressedSvgFormat");
-      });
-
-      it("入力の連長圧縮に bytes 文字列に 0~F 以外の文字が含まれる場合に invalid arrayify value を返す", async () => {
-        const emptyCompressedSVG = "0xff!!";
-        await expect(contract.constructDotImage(emptyCompressedSVG)).to.be.rejectedWith("invalid arrayify value");
-      });
-
-      it("入力の連長圧縮が 0x 始まりの bytes 文字列でない場合に invalid arrayify value を返す", async () => {
-        const emptyCompressedSVG = "ff00";
-        await expect(contract.constructDotImage(emptyCompressedSVG)).to.be.rejectedWith("invalid arrayify value");
+      testCases.forEach(({name, input, expected}) => {
+        it(`入力の連長圧縮が${name}に ${expected} エラーを返す`, async () => {
+          await expect(contract.constructDotImage(input)).to.be.rejectedWith(expected);
+        });
       });
     });
   })
