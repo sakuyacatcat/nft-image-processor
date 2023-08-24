@@ -5,15 +5,34 @@ import {IDotImageRepository} from "./interface/IDotImageRepository.sol";
 
 contract DotImageRepository is IDotImageRepository {
     function constructDotImage(bytes calldata inputData) external pure override returns (DotImage memory) {
-        _validateRLESvgLength(inputData);
+        _validateRLESvg(inputData);
 
         DotImage memory dotImage;
         dotImage.imageData = inputData;
         return dotImage;
     }
 
-    function _validateRLESvgLength(bytes memory rleSvg) internal pure {
+    function _validateRLESvg(bytes memory rleSvg) internal pure {
+        require(_isValidRleSvgFormat(rleSvg), "invalidDecompressedSvgFormat");
         require(_decompressedSvgLength(rleSvg) == 1024, "invalidDecompressedSvgLength");
+    }
+
+    function _isValidRleSvgFormat(bytes memory rleSvg) internal pure returns (bool) {
+        bool result = true;
+
+        if (_isEmptyBytes(rleSvg) || _isUnevenPairBytes(rleSvg)) {
+            result = false;
+        }
+
+        return result;
+    }
+
+    function _isEmptyBytes(bytes memory rleSvg) internal pure returns (bool) {
+        return rleSvg.length == 0;
+    }
+
+    function _isUnevenPairBytes(bytes memory rleSvg) internal pure returns (bool) {
+        return rleSvg.length % 2 != 0;
     }
 
     function _decompressedSvgLength(bytes memory rleSvg) internal pure returns (uint256) {

@@ -70,10 +70,15 @@ contracts
 
 テスト容易性が高いものから作っていく。
 
-- [ ] 連長圧縮された svg 文字列を入力に DotImage オブジェクトを作成できる
-  - [ ] 入力された連長圧縮された svg 文字列が不正な場合 DotImage オブジェクトの作成に失敗する
-    - [ ] 入力が適切な連長圧縮フォーマットであるが、32x32 ドット分の文字列でない場合にエラーを返す
-    - [ ] 入力が不正な連長圧縮フォーマットでない文字列の場合にエラーを返す
+- [x] 連長圧縮された svg 文字列を入力に DotImage オブジェクトを作成できる
+  - [x] 入力された連長圧縮された svg 文字列が不正な長さの場合 DotImage オブジェクトの作成に失敗する
+    - [x] 入力が適切な連長圧縮フォーマットであるが、32x32 ドット分の文字列でなく、1 文字足りない場合に invalidDecompressedSvgLength エラーを返す
+    - [x] 入力が適切な連長圧縮フォーマットであるが、32x32 ドット分の文字列でなく、1 文字多い場合に invalidDecompressedSvgLength エラーを返す
+  - [x] 入力された連長圧縮された svg 文字列が不正なフォーマットの場合 DotImage オブジェクトの作成に失敗する
+    - [x] 入力の連長圧縮が空の bytes 文字列の場合に invalidDecompressedSvgFormat を返す
+    - [x] 入力の連長圧縮が奇数長の bytes 文字列の場合に invalidDecompressedSvgFormat を返す
+    - [x] 入力の連長圧縮に bytes 文字列に 0~F 以外の文字が含まれる場合に invalid arrayify value を返す
+    - [x] 入力の連長圧縮が 0x 始まりの bytes 文字列でない場合に invalid arrayify value を返す
   - [x] 入力された連長圧縮された svg 文字列が適切な場合 DotImage オブジェクトの作成に成功する
     - [x] 入力が適切な連長圧縮フォーマットであり、32x32 ドット分の文字列の場合 svg オブジェクトを返す
 
