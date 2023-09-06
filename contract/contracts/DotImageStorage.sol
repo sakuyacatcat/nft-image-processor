@@ -2,14 +2,41 @@
 pragma solidity ^0.8.0;
 
 import {IDotImageStorage} from "./interface/IDotImageStorage.sol";
+import {IDotImageRepository} from "./interface/IDotImageRepository.sol";
 import {DotImageLibrary} from "./lib/DotImageLibrary.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract DotImageStorage is IDotImageStorage {
+contract DotImageStorage is IDotImageStorage, Ownable {
     mapping(uint256 => DotImageLibrary.DotImage) private _dotImages;
 
-    function createDotImage(uint256 tokenId, DotImageLibrary.DotImage memory dotImage) external {}
+    address private _owner;
+    IDotImageRepository private _dotImageRepository;
 
-    function readDotImage(uint256 tokenId) external view returns (DotImageLibrary.DotImage memory) {}
+    constructor() {
+        _owner = msg.sender;
+    }
 
-    function deleteDotImage(uint256 tokenId) external {}
+    function setRepository(address dotImageRepository) external onlyOwner {
+        _dotImageRepository = IDotImageRepository(dotImageRepository);
+    }
+
+    modifier onlyValidRepository() {
+        require(IDotImageRepository(msg.sender) == _dotImageRepository, "invalidRepository");
+        _;
+    }
+
+    function createDotImage(uint256 tokenId, DotImageLibrary.DotImage memory dotImage) external onlyValidRepository {
+        _dotImages[tokenId] = dotImage;
+    }
+
+    function readDotImage(uint256 tokenId)
+        external
+        view
+        onlyValidRepository
+        returns (DotImageLibrary.DotImage memory)
+    {
+        return _dotImages[tokenId];
+    }
+
+    function deleteDotImage(uint256 tokenId) external onlyValidRepository {}
 }

@@ -9,4 +9,6 @@ interface IDotImageStorage {
     function readDotImage(uint256 tokenId) external view returns (DotImageLibrary.DotImage memory);
 
     function deleteDotImage(uint256 tokenId) external;
+
+    function setRepository(address dotImageRepository) external;
 }

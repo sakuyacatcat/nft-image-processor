@@ -2,9 +2,13 @@
 pragma solidity ^0.8.0;
 
 import {IDotImageRepository} from "./interface/IDotImageRepository.sol";
+import {IDotImageStorage} from "./interface/IDotImageStorage.sol";
 import {DotImageLibrary} from "./lib/DotImageLibrary.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract DotImageRepository is IDotImageRepository {
+contract DotImageRepository is IDotImageRepository, Ownable {
+    IDotImageStorage private _dotImageStorage;
+
     function constructDotImage(bytes calldata inputData)
         external
         pure
@@ -18,16 +22,19 @@ contract DotImageRepository is IDotImageRepository {
         return dotImage;
     }
 
-    function sourceDotImage(uint256 tokenId) external pure override returns (DotImageLibrary.DotImage memory) {
-        DotImageLibrary.DotImage memory dotImage;
-        dotImage.imageData = bytes("sourceDotImage");
+    function mintDotImage(uint256 tokenId, DotImageLibrary.DotImage memory dotImage) external override {
+        _dotImageStorage.createDotImage(tokenId, dotImage);
+    }
+
+    function getDotImage(uint256 tokenId) external view override returns (DotImageLibrary.DotImage memory) {
+        DotImageLibrary.DotImage memory dotImage = _dotImageStorage.readDotImage(tokenId);
         return dotImage;
     }
 
-    function sinkDotImage(uint256 tokenId, DotImageLibrary.DotImage memory dotImage) external pure override {
-        require(tokenId == 0, "invalidTokenId");
-        require(_isValidRleSvgFormat(dotImage.imageData), "invalidDecompressedSvgFormat");
-        require(_decompressedSvgLength(dotImage.imageData) == 1024, "invalidDecompressedSvgLength");
+    function burnDotImage(uint256 tokenId) external pure override {}
+
+    function setStorage(address dotImageStorage) external onlyOwner {
+        _dotImageStorage = IDotImageStorage(dotImageStorage);
     }
 
     function _validateRLESvg(bytes memory rleSvg) private pure {

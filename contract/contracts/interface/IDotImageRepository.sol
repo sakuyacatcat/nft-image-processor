@@ -5,6 +5,8 @@ import {DotImageLibrary} from "../lib/DotImageLibrary.sol";
 
 interface IDotImageRepository {
     function constructDotImage(bytes calldata inputData) external view returns (DotImageLibrary.DotImage memory);
-    function sourceDotImage(uint256 tokenId) external view returns (DotImageLibrary.DotImage memory);
-    function sinkDotImage(uint256 tokenId, DotImageLibrary.DotImage memory dotImage) external view;
+    function mintDotImage(uint256 tokenId, DotImageLibrary.DotImage memory dotImage) external;
+    function getDotImage(uint256 tokenId) external view returns (DotImageLibrary.DotImage memory);
+    function burnDotImage(uint256 tokenId) external view;
+    function setStorage(address dotImageStorage) external;
 }
