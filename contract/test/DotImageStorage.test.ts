@@ -24,6 +24,22 @@ describe("DotImageStorage", function() {
         expect(storedDotImage.imageData).to.deep.equal(dotImage.imageData);
       });
     });
+
+    describe("入力された tokenId が有効な整数でない場合、保存に失敗する", function() {
+      const testCases = [
+        { name: "小数の場合", input: 1.1, expected: "underflow" },
+        { name: "負の数の場合", input: -1, expected: "value out-of-bounds" },
+        { name: "最小の値より 1 小さい 0 の場合", input: 0, expected: "invalidTokenId" },
+      ];
+
+      testCases.forEach(({name, input, expected}) => {
+        it(`tokenId が${name}に${expected}エラーを返す`, async () => {
+          const registerId = input;
+          const dotImage = { imageData: '0x' + crypto.randomBytes(10).toString("hex") };
+          await expect(storage.createDotImage(registerId, dotImage)).to.be.rejectedWith(expected);
+        });
+      });
+    });
   });
 
   describe("入力された tokenId に関連付けられた DotImage オブジェクトを取得できる", function() {

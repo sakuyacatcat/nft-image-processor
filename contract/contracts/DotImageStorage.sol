@@ -26,6 +26,7 @@ contract DotImageStorage is IDotImageStorage, Ownable {
     }
 
     function createDotImage(uint256 tokenId, DotImageLibrary.DotImage memory dotImage) external onlyValidRepository {
+        require(_isValidTokenId(tokenId), "invalidTokenId");
         _dotImages[tokenId] = dotImage;
     }
 
@@ -39,4 +40,9 @@ contract DotImageStorage is IDotImageStorage, Ownable {
     }
 
     function deleteDotImage(uint256 tokenId) external onlyValidRepository {}
+
+    function _isValidTokenId(uint256 tokenId) private pure returns (bool) {
+        return tokenId > 0;
+    }
+
 }
