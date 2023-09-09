@@ -6,7 +6,7 @@ import { ethers } from "hardhat";
 describe("DotImageStorage", function() {
   let storage: Contract;
 
-  before(async () => {
+  beforeEach(async () => {
     const deployer = await ethers.getSigner(0);
     const DotImageStorage = await ethers.getContractFactory("DotImageStorage");
     storage = await DotImageStorage.connect(deployer).deploy();
@@ -38,6 +38,17 @@ describe("DotImageStorage", function() {
           const dotImage = { imageData: '0x' + crypto.randomBytes(10).toString("hex") };
           await expect(storage.createDotImage(registerId, dotImage)).to.be.rejectedWith(expected);
         });
+      });
+    });
+
+    describe("入力された tokenId が既に使用されている場合、保存に失敗する", function() {
+      it("入力された tokenId が既に使用されている場合、existingTokenId エラーを返す", async () => {
+        const registerId = 1;
+        const dotImage1 = { imageData: '0x' + crypto.randomBytes(10).toString("hex") };
+        await storage.createDotImage(registerId, dotImage1);
+
+        const dotImage2 = { imageData: '0x' + crypto.randomBytes(10).toString("hex") };
+        await expect(storage.createDotImage(registerId, dotImage2)).to.be.rejectedWith("existingTokenId");
       });
     });
   });

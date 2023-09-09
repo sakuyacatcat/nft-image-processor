@@ -5,7 +5,7 @@ import { ethers } from "hardhat";
 describe("DotImageRepository", function() {
   let contract: Contract;
 
-  before(async () => {
+  beforeEach(async () => {
     const DotImageRepository = await ethers.getContractFactory("DotImageRepository");
     contract = await DotImageRepository.deploy();
   });
