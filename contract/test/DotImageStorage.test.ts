@@ -88,6 +88,36 @@ describe("DotImageStorage", function() {
   });
 
   describe("入力された tokenId に関連付けられた DotImage オブジェクトを削除できる", function() {
+    describe("入力された tokenId が有効であり、関連付けられた DotImage オブジェクトが存在する場合、削除に成功する", function() {
+      it("tokenId が 1 であり、関連付けられた DotImage オブジェクトが存在する場合、削除に成功する", async () => {
+        const registerId = 1;
+        const dotImage = { imageData: '0x' + crypto.randomBytes(10).toString("hex") };
+        await storage.createDotImage(registerId, dotImage);
+        await storage.deleteDotImage(registerId);
+        await expect(storage.readDotImage(registerId)).to.be.rejectedWith("notExistingTokenId");
+      });
+    });
 
+    describe("入力された tokenId が有効であるが、関連付けられた DotImage オブジェクトが存在しない場合、削除に失敗する", function() {
+      it("tokenId が 1 であり、関連付けられた DotImage オブジェクトが存在しない場合、notExistingTokenId エラーを返す", async () => {
+        const registerId = 1;
+        await expect(storage.deleteDotImage(registerId)).to.be.rejectedWith("notExistingTokenId");
+      });
+    });
+
+    describe("入力された tokenId が有効でない場合、削除に失敗する", function() {
+      const testCases = [
+        { name: "小数の場合", input: 1.1, expected: "underflow" },
+        { name: "負の数の場合", input: -1, expected: "value out-of-bounds" },
+        { name: "最小の値より 1 小さい 0 の場合", input: 0, expected: "invalidTokenId" },
+      ];
+
+      testCases.forEach(({name, input, expected}) => {
+        it(`tokenId が${name}に${expected}エラーを返す`, async () => {
+          const registerId = input;
+          await expect(storage.deleteDotImage(registerId)).to.be.rejectedWith(expected);
+        });
+      });
+    });
   });
 });
