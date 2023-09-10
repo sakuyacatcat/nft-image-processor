@@ -31,7 +31,7 @@ contract DotImageRepository is IDotImageRepository, Ownable {
         return dotImage;
     }
 
-    function burnDotImage(uint256 tokenId) external pure override {
+    function burnDotImage(uint256 tokenId) external override {
         _dotImageStorage.deleteDotImage(tokenId);
     }
 

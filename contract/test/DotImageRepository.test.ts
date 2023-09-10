@@ -3,11 +3,11 @@ import { Contract } from "ethers";
 import { ethers } from "hardhat";
 
 describe("DotImageRepository", function() {
-  let contract: Contract;
+  let repository: Contract;
 
   beforeEach(async () => {
     const DotImageRepository = await ethers.getContractFactory("DotImageRepository");
-    contract = await DotImageRepository.deploy();
+    repository = await DotImageRepository.deploy();
   });
 
   describe("連長圧縮された svg 文字列を入力に DotImage オブジェクトを作成できる", function() {
@@ -15,7 +15,7 @@ describe("DotImageRepository", function() {
       it("入力が適切な連長圧縮フォーマットであり、32x32 ドット分の文字列の場合 svg オブジェクトを返す", async () => {
         // すべて"00"のカラーインデックスの32x32のドット絵のsvgを連長圧縮したbytes列
         const validCompressedSVG = "0xff00ff00ff00ff000400";
-        const dotImage = await contract.constructDotImage(validCompressedSVG)
+        const dotImage = await repository.constructDotImage(validCompressedSVG)
         expect(dotImage.imageData).to.equal("0xff00ff00ff00ff000400");
       });
     });
@@ -28,7 +28,7 @@ describe("DotImageRepository", function() {
 
       testCases.forEach(({name, input, expected}) => {
         it(`入力が適切な連長圧縮フォーマットであるが、${name}に ${expected} エラーを返す`, async () => {
-          await expect(contract.constructDotImage(input)).to.be.rejectedWith(expected);
+          await expect(repository.constructDotImage(input)).to.be.rejectedWith(expected);
         });
       });
     });
@@ -43,9 +43,9 @@ describe("DotImageRepository", function() {
 
       testCases.forEach(({name, input, expected}) => {
         it(`入力の連長圧縮が${name}に ${expected} エラーを返す`, async () => {
-          await expect(contract.constructDotImage(input)).to.be.rejectedWith(expected);
+          await expect(repository.constructDotImage(input)).to.be.rejectedWith(expected);
         });
       });
     });
-  })
+  });
 });

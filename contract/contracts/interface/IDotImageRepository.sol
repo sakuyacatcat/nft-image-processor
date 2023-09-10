@@ -10,5 +10,5 @@ interface IDotImageRepository {
 
     function getDotImage(uint256 tokenId) external view returns (DotImageLibrary.DotImage memory);
 
-    function burnDotImage(uint256 tokenId) external view;
+    function burnDotImage(uint256 tokenId) external;
 }
