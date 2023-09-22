@@ -23,6 +23,7 @@
     "@types/chai": "^4.3.5",
     "@types/mocha": "^10.0.1",
     "@types/node": "^20.5.2",
+    "base64-sol": "^1.1.0",
     "chai": "^4.3.7",
     "ethers": "^5.0.0",
     "hardhat": "^2.13.0",
