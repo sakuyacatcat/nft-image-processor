@@ -7,7 +7,12 @@ import {DotImageLibrary} from "./lib/DotImageLibrary.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract DotImageRepository is IDotImageRepository, Ownable {
+    address private _owner;
     IDotImageStorage private _dotImageStorage;
+
+    constructor() {
+        _owner = msg.sender;
+    }
 
     function constructDotImage(bytes calldata inputData)
         external
