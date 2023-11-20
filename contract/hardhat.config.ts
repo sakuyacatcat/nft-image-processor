@@ -1,4 +1,6 @@
-require("@matterlabs/hardhat-zksync-solc");
+import "@matterlabs/hardhat-zksync-solc";
+import "@nomicfoundation/hardhat-chai-matchers";
+import "@nomiclabs/hardhat-ethers";
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -24,6 +26,10 @@ module.exports = {
       chainId: 324,
       zksync: true,
     },
+    hardhat: {
+      chainId: 31337,
+      initialBaseFeePerGas: 0,
+    },
   },
   paths: {
     artifacts: "./artifacts-zk",
@@ -39,5 +45,8 @@ module.exports = {
         runs: 200,
       },
     },
+  },
+  mocha: {
+    timeout: 60_000,
   },
 };
